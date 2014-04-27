@@ -23,12 +23,16 @@ module ExtjsScaffold
         template 'app.js', File.join('app/assets/javascripts/', app_file_name)
       end
 
+      def create_app_folder
+        empty_directory File.join("app/assets/javascripts", "app")
+      end
+
       def create_util_file
-        empty_directory File.join("app/assets/javascripts", "util")
+        empty_directory File.join("app/assets/javascripts/app", "util")
       end
 
       def create_ux_files
-        empty_directory File.join("app/assets/javascripts", "ux")
+        empty_directory File.join("app/assets/javascripts/app", "ux")
       end
 
       protected

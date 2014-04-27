@@ -50,12 +50,12 @@ module ExtjsScaffold
 
       # create Extjs MVC structure
       def create_js_root_folder
-        empty_directory File.join("app/assets/javascripts", "controller")
-        empty_directory File.join("app/assets/javascripts", "model")
-        empty_directory File.join("app/assets/javascripts", "store")
-        empty_directory File.join("app/assets/javascripts", "view")
+        empty_directory File.join("app/assets/javascripts/app", "controller")
+        empty_directory File.join("app/assets/javascripts/app", "model")
+        empty_directory File.join("app/assets/javascripts/app", "store")
+        empty_directory File.join("app/assets/javascripts/app", "view")
         # create Extjs controller view folder
-        empty_directory File.join("app/assets/javascripts/view", singular_table_name)
+        empty_directory File.join("app/assets/javascripts/app/view", singular_table_name)
       end
 
       # copy over controller js files
@@ -64,13 +64,13 @@ module ExtjsScaffold
           filename = [name, :js].compact.join(".")
           case name
           when 'Controller'
-            template "js/#{filename}", File.join("app/assets/javascripts/controller", "#{plural_table_name.capitalize}.js")
+            template "js/#{filename}", File.join("app/assets/javascripts/app/controller", "#{plural_table_name.capitalize}.js")
           when 'Model'
-            template "js/#{filename}", File.join("app/assets/javascripts/model", "#{singular_table_name.capitalize}.js")
+            template "js/#{filename}", File.join("app/assets/javascripts/app/model", "#{singular_table_name.capitalize}.js")
           when 'Store'
-            template "js/#{filename}", File.join("app/assets/javascripts/store", "#{plural_table_name.capitalize}.js")
+            template "js/#{filename}", File.join("app/assets/javascripts/app/store", "#{plural_table_name.capitalize}.js")
           else
-            template "js/#{filename}", File.join("app/assets/javascripts/view", singular_table_name, filename)
+            template "js/#{filename}", File.join("app/assets/javascripts/app/view", singular_table_name, filename)
           end
         end
       end
@@ -80,7 +80,7 @@ module ExtjsScaffold
         attributes.select {|attr| attr.reference? }.each do |attribute|
           @reference_attribute = attribute
           filename = [reference_store, :js].compact.join(".")
-          template "js/#{filename}", File.join("app/assets/javascripts/store", "#{singular_table_name.capitalize}#{attribute.name.capitalize.pluralize}.js")
+          template "js/#{filename}", File.join("app/assets/javascripts/app/store", "#{singular_table_name.capitalize}#{attribute.name.capitalize.pluralize}.js")
         end
       end
 
@@ -218,17 +218,25 @@ module ExtjsScaffold
 
       def create_ext_formfield(attribute)
         if attribute.reference?
-          return "{ id: '#{attribute.name}_#{reference_field(attribute)}',
-            fieldLabel: '#{attribute.name.titleize}',
-            name: '[#{singular_table_name}]#{attribute.name}_id',
-            store: #{app_name}.store.#{singular_table_name.capitalize}#{attribute.name.capitalize.pluralize},
-            displayField:'#{reference_field(attribute)}',
-            emptyText: 'type at least 2 characters from #{reference_field(attribute)}',
-            xtype: 'parentcombo'}"
+          return "{
+              id: '#{attribute.name}_#{reference_field(attribute)}',
+              fieldLabel: '#{attribute.name.titleize}',
+              name: '[#{singular_table_name}]#{attribute.name}_id',
+              store: #{app_name}.store.#{singular_table_name.capitalize}#{attribute.name.capitalize.pluralize},
+              displayField:'#{reference_field(attribute)}',
+              emptyText: 'type at least 2 characters from #{reference_field(attribute)}',
+              xtype: 'parentcombo'
+            }"
         else
           case attribute.type.to_s
           when 'boolean'
-            return "{id: '#{attribute.name}', name: '[#{singular_table_name}]#{attribute.name}', fieldLabel: '#{attribute.name.titleize}?', width: 120, xtype: 'checkbox'}"
+            return "{
+                id: '#{attribute.name}',
+                name: '[#{singular_table_name}]#{attribute.name}',
+                fieldLabel: '#{attribute.name.titleize}?',
+                width: 120,
+                xtype: 'checkbox'
+              }"
           when 'date'
             return "{id: '#{attribute.name}', name: '[#{singular_table_name}]#{attribute.name}', fieldLabel: '#{attribute.name.titleize}', width: 250, xtype: 'datefield'}"
           when 'text'
@@ -245,11 +253,23 @@ module ExtjsScaffold
 
       def create_ext_updateformfield(attribute)
         # build field container with disable checkbox
-        field = "{ xtype: 'fieldcontainer', fieldLabel: '#{field_label(attribute)}', layout: 'hbox', width: #{updatefield_width(attribute)}, combineErrors: true,
-						items:[
-							{ xtype: 'displayfield', hideLabel: true, value: 'Enable'}
-							,{ xtype: 'checkboxfield', width: 20, hideLabel: true, style: 'margin-left: 5px'}
-							"
+        field = "{
+          xtype: 'fieldcontainer',
+          fieldLabel: '#{field_label(attribute)}',
+          layout: 'hbox',
+          width: #{updatefield_width(attribute)},
+          combineErrors: true,
+					items:[
+						{
+              xtype: 'displayfield',
+              hideLabel: true,
+              value: 'Enable'
+            },{
+              xtype: 'checkboxfield',
+              width: 20,
+              hideLabel: true,
+              style: 'margin-left: 5px'
+            }"
         if attribute.reference?
           field += ",{ id: '#{attribute.name}_#{reference_field(attribute)}',
             hideLabel: true,
@@ -278,7 +298,7 @@ module ExtjsScaffold
         end
 
         field += "
-			      ]
+			     ]
 	      }
 
         "
