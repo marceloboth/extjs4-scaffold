@@ -15,7 +15,7 @@ Feature: Generate Extjs Install and Scaffold
 			gem "haml"
 			gem "kaminari", "~> 0.13.0"
 			gem "extjs4-rails"
-			gem 'extjs-scaffold', '../../../'
+			gem 'extjs_scaffold', '../../../'
 
 			"""
 		And I overwrite "app/views/layouts/application.html.erb" with:
@@ -53,17 +53,17 @@ Feature: Generate Extjs Install and Scaffold
 		"""
 		Your bundle is complete!
 		"""
-		And I run `rails g extjs-scaffold:install`
+		And I run `rails g extjs_scaffold:install`
 		Then the following files should exist:
 			| app/assets/javascripts/TestApp.js |
-		And I run `rails g extjs-scaffold:scaffold category name:string`
+		And I run `rails g extjs_scaffold:scaffold category name:string`
 			Then the following files should exist:
 				| app/assets/javascripts/controller/Categories.js |
 				| app/controllers/categories_controller.rb |
 				| app/models/category.rb |
 				| app/views/categories/index.html.erb |
 				| test/functional/categories_controller_test.rb |
-		And I run `rails g extjs-scaffold:scaffold product category:references name:string`
+		And I run `rails g extjs_scaffold:scaffold product category:references name:string`
 			Then the following files should exist:
 				| app/assets/javascripts/controller/Products.js |
 				| app/controllers/products_controller.rb |
@@ -87,14 +87,14 @@ Feature: Generate Extjs Install and Scaffold
 		And I run `rails g rspec:install`
 		Then the following files should exist:
 			| spec/spec_helper.rb |
-		And I run `rails g extjs-scaffold:scaffold widget name:string sku:string in_stock:boolean price:decimal last_received_on:date --template_engine=haml`
+		And I run `rails g extjs_scaffold:scaffold widget name:string sku:string in_stock:boolean price:decimal last_received_on:date --template_engine=haml`
 		Then the following files should exist:
 			| app/assets/javascripts/controller/Widgets.js |
 			| app/controllers/widgets_controller.rb |
 			| app/models/widget.rb |
 			| app/views/widgets/index.html.haml |
 			| spec/controllers/widgets_controller_spec.rb |
-		And I run `rails g extjs-scaffold:scaffold part widget:references name:string quantity:integer --template_engine=haml --reference-fields widget:sku`
+		And I run `rails g extjs_scaffold:scaffold part widget:references name:string quantity:integer --template_engine=haml --reference-fields widget:sku`
 		Then the following files should exist:
 			| app/assets/javascripts/controller/Parts.js |
 			| app/controllers/parts_controller.rb |

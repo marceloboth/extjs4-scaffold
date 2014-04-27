@@ -1,7 +1,7 @@
 require 'generators/extjs_scaffold'
 require 'rails/generators/resource_helpers'
 
-module Extjs4Scaffold
+module ExtjsScaffold
   module Generators
     class ScaffoldControllerGenerator < Base
 
@@ -10,9 +10,9 @@ module Extjs4Scaffold
       argument :attributes, :type => :array, :default => [], :banner => "field:type field:type"
 
       class_option :file_name, :desc => "Name of file used to hold Ext.application",
-              :aliases => '-n', :default =>Extjs4Scaffold::Generators::Base.rails_app_name
+              :aliases => '-n', :default =>ExtjsScaffold::Generators::Base.rails_app_name
       class_option :app_name, :desc => "Name of app used in Ext.application",
-              :aliases => '-a', :default => Extjs4Scaffold::Generators::Base.rails_app_name
+              :aliases => '-a', :default => ExtjsScaffold::Generators::Base.rails_app_name
 
       class_option :orm, :desc => "ORM used to generate the controller"
       class_option :template_engine, :desc => "Template engine to generate view files"

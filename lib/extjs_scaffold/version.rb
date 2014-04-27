@@ -1,3 +1,3 @@
-module Extjs4Scaffold
+module ExtjsScaffold
   VERSION = "0.0.1"
 end

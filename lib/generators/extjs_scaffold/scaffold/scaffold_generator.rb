@@ -1,6 +1,6 @@
 require "rails/generators/rails/scaffold/scaffold_generator"
 
-module Extjs4Scaffold
+module ExtjsScaffold
   module Generators
     class ScaffoldGenerator < Rails::Generators::ScaffoldGenerator
       remove_hook_for :scaffold_controller

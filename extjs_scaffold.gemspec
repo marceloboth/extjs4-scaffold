@@ -1,10 +1,10 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
-require "extjs-scaffold/version"
+require "extjs_scaffold/version"
 
 Gem::Specification.new do |s|
-  s.name        = "extjs-scaffold"
-  s.version     = Extjs4Scaffold::VERSION
+  s.name        = "extjs_scaffold"
+  s.version     = ExtjsScaffold::VERSION
   s.authors     = ["marcelo.both"]
   s.email       = ["marcelo.both@gmail.com"]
   s.homepage    = "https://github.com/marceloboth/extjs4-scaffold"
