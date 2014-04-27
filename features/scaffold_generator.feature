@@ -1,8 +1,8 @@
 Feature: Generate Extjs Install and Scaffold
   In order to use extjs as a scaffold replacement
-  As a user of Rails3 and extjs4
+  As a user of Rails 4 and Extjs 4
 	I would like to generate an extjs scaffold
-	
+
 	Scenario: Generate ExtJs Scaffold
     When I run `rails new test_app`
 		And I cd to "test_app"
@@ -14,9 +14,9 @@ Feature: Generate Extjs Install and Scaffold
 			"""
 			gem "haml"
 			gem "kaminari", "~> 0.13.0"
-			gem "extjs_renderer", "~> 0.1.0"
-			gem 'extjs_scaffold', :path => '../../../'
-			
+			gem "extjs4-rails"
+			gem 'extjs-scaffold', '../../../'
+
 			"""
 		And I overwrite "app/views/layouts/application.html.erb" with:
 			"""
@@ -48,10 +48,6 @@ Feature: Generate Extjs Install and Scaffold
 			//= require_tree ./controller
 			//= require_tree .
 			"""
-		And I install extjs in "test_app"
-		Then the following files should exist:
-			| public/extjs/bootstrap.js |
-			| public/extjs/ext-all-debug.js |
 		And I run `bundle install`
 		Then the output should contain:
 		"""
@@ -59,7 +55,7 @@ Feature: Generate Extjs Install and Scaffold
 		"""
 		And I run `rails g extjs_scaffold:install`
 		Then the following files should exist:
-			| app/assets/javascripts/TestApp.js |
+			| app/assets/javascripts/app.js |
 		And I run `rails g extjs_scaffold:scaffold category name:string`
 			Then the following files should exist:
 				| app/assets/javascripts/controller/Categories.js |
@@ -72,11 +68,11 @@ Feature: Generate Extjs Install and Scaffold
 				| app/assets/javascripts/controller/Products.js |
 				| app/controllers/products_controller.rb |
 				| app/models/product.rb |
-				| app/views/products/index.html.erb |					
+				| app/views/products/index.html.erb |
 				| test/functional/products_controller_test.rb |
 		And I run `rails g scaffold team name:string`
 			Then the following files should exist:
-				| app/views/products/index.html.erb |					
+				| app/views/products/index.html.erb |
 				| test/functional/teams_controller_test.rb |
 		And I append to "Gemfile" with:
 			"""

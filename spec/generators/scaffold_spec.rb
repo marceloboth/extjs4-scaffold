@@ -1,14 +1,14 @@
 require "spec_helper"
 require "generator_spec/test_case"
 
-require File.expand_path('../../../lib/generators/extjs_scaffold/scaffold/scaffold_generator.rb', __FILE__)
+require File.expand_path('../../../lib/generators/extjs-scaffold/scaffold/scaffold_generator.rb', __FILE__)
 
-describe ExtjsScaffold::Generators::ScaffoldGenerator do
+describe Extjs4Scaffold::Generators::ScaffoldGenerator do
   include GeneratorSpec::TestCase
   destination File.expand_path("../../../tmp", __FILE__)
   support_path = File.expand_path("../../support", __FILE__)
   app_name = Rails.root.to_s.split('/').last.titlecase.split.join
-  
+
   before(:each) do
     prepare_destination
     mkdir_p "#{destination_root}/config"
@@ -16,11 +16,11 @@ describe ExtjsScaffold::Generators::ScaffoldGenerator do
     mkdir_p "#{destination_root}//app/assets/javascripts"
     copy "#{support_path}/App.js", "#{destination_root}/app/assets/javascripts/#{app_name}.js"
   end
-  
+
   it "generates scaffold using active_record and haml" do
     controller_name = "widget"
     run_generator %w(widget name:string color:string --orm=active_record --template_engine=haml)
-  
+
     destination_root.should have_structure {
       directory "app" do
         directory "assets" do
@@ -94,11 +94,11 @@ describe ExtjsScaffold::Generators::ScaffoldGenerator do
       end
     }
   end
-  
+
   it "generates model with will_paginate pagination" do
     controller_name = "widget"
     run_generator %w(widget name:string color:string --orm=active_record --pagination=will_paginate)
-  
+
     destination_root.should have_structure {
       directory "app" do
         directory "models" do
@@ -109,11 +109,11 @@ describe ExtjsScaffold::Generators::ScaffoldGenerator do
       end
     }
   end
-  
+
   it "generates scaffold with reference with default 'name' field lookup" do
     controller_name = "widget"
     run_generator %w(widget item:references name:string color:string --orm=active_record)
-  
+
     destination_root.should have_structure {
       directory "app" do
         directory "assets" do
@@ -154,11 +154,11 @@ describe ExtjsScaffold::Generators::ScaffoldGenerator do
       end
     }
   end
-  
+
   it "generates scaffold with reference with user defined field lookup" do
     controller_name = "widget"
     run_generator %w(widget item:references name:string color:string --orm=active_record --reference-fields item:sku)
-  
+
     destination_root.should have_structure {
       directory "app" do
         directory "assets" do
@@ -209,11 +209,11 @@ describe ExtjsScaffold::Generators::ScaffoldGenerator do
       end
     }
   end
-  
+
   it "generates scaffold with rspec controller test" do
     controller_name = "widget"
     run_generator %w(complex_model_name item:references widget:references name:string color:string --orm=active_record --test-framework=rspec)
-  
+
     destination_root.should have_structure {
       directory "spec" do
         directory "models" do
@@ -225,11 +225,11 @@ describe ExtjsScaffold::Generators::ScaffoldGenerator do
       end
     }
   end
-  
+
   it "generates scaffold with test_unit controller test" do
     controller_name = "widget"
     run_generator %w(complex_model_name item:references widget:references name:string color:string --orm=active_record --test-framework=test_unit)
-  
+
     destination_root.should have_structure {
       directory "test" do
         directory "unit" do

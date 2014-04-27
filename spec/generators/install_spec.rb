@@ -1,25 +1,25 @@
 require "spec_helper"
 require "generator_spec/test_case"
-require File.expand_path('../../../lib/generators/extjs_scaffold/install/install_generator.rb', __FILE__)
+require File.expand_path('../../../lib/generators/extjs-scaffold/install/install_generator.rb', __FILE__)
 
-describe ExtjsScaffold::Generators::InstallGenerator do
+describe Extjs4Scaffold::Generators::InstallGenerator do
   include GeneratorSpec::TestCase
   destination File.expand_path("../../../tmp", __FILE__)
-  
+
   before(:each) do
     prepare_destination
   end
-  
+
   it "generates files with no options" do
     run_generator
-  
+
     destination_root.should have_structure {
       app_name = Rails.root.to_s.split('/').last.titlecase.split.join
-      
+
       no_file "non_existant.rb"
       directory "public" do
         directory "images" do
-          directory "extjs_scaffold" do
+          directory "extjs-scaffold" do
             file "tick.png"
           end
         end
@@ -32,7 +32,7 @@ describe ExtjsScaffold::Generators::InstallGenerator do
         end
         directory "assets" do
           directory "images" do
-            directory "extjs_scaffold" do
+            directory "extjs-scaffold" do
               file "add.gif"
               file "application_form_edit.png"
               file "delete.gif"
@@ -41,7 +41,7 @@ describe ExtjsScaffold::Generators::InstallGenerator do
             end
           end
           directory "stylesheets" do
-            file "extjs_scaffold.css.scss"
+            file "extjs-scaffold.css.scss"
           end
           directory "javascripts" do
             file "#{app_name}.js" do
@@ -98,10 +98,10 @@ describe ExtjsScaffold::Generators::InstallGenerator do
       end
     }
   end
-  
+
   it "generates files with options" do
     run_generator %w(--file_name=Foo --app_name=Bar)
-  
+
     destination_root.should have_structure {
       no_file "non_existant.rb"
       directory "app" do
@@ -115,10 +115,10 @@ describe ExtjsScaffold::Generators::InstallGenerator do
       end
     }
   end
-  
+
   it "generates files with options aliases" do
     run_generator %w(-n=Foo -a=Bar)
-  
+
     destination_root.should have_structure {
       no_file "non_existant.rb"
       directory "app" do
