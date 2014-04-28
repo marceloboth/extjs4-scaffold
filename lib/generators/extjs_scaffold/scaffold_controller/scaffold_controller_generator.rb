@@ -14,38 +14,21 @@ module ExtjsScaffold
       class_option :app_name, :desc => "Name of app used in Ext.application",
               :aliases => '-a', :default => ExtjsScaffold::Generators::Base.rails_app_name
 
-      class_option :orm, :desc => "ORM used to generate the controller"
-      class_option :template_engine, :desc => "Template engine to generate view files"
-      class_option :views, :type => :boolean, :default => true
       class_option :routes, :type => :boolean, :default => true
       class_option :pagination, :desc => "Rails pagination gem 'kaminari' or 'will_paginate'", :default => 'kaminari'
       class_option :reference_fields, :type => :hash, :desc => "Collection of fields to use for one table lookup: --reference_fields parent_table:field_name
                                            # Default: parent_table:name"
       class_option :test_framework, :desc => "Test framework to be invoked"
 
-      # add class method 'search' to model
-      def create_model_methods
-        @pagination = options.pagination
-        if File.exists?("#{destination_root}/app/models/#{singular_table_name}.rb")
-          template "model.rb", "app/models/#{controller_file_name}_tmp.rb"
-          f = File.open "#{destination_root}/app/models/#{controller_file_name}_tmp.rb", "r"
-          model_methods = f.read
-          # make related tables updateable - add to attr_accessible
-          refs = reference_attributes.map{|a| ":#{a.name}_id, :#{a.name}_#{reference_field(a)}"}
-          if refs.size > 0
-            refs_attr = refs.sort.join(", ")
-            insert_into_file "app/models/#{singular_table_name}.rb", ", "+refs_attr, :after => /attr_accessible.*/
-          end
-          # add search with pagination class method
-          insert_into_file "app/models/#{singular_table_name}.rb", "\n"+model_methods, :after => /attr_accessible.*/
-          remove_file "app/models/#{controller_file_name}_tmp.rb"
-        end
-      end
-
       check_class_collision :suffix => "Controller"
 
       def create_controller_files
         template 'controller.rb', File.join('app/controllers', class_path, "#{controller_file_name}_controller.rb")
+      end
+
+      def create_serializer_files
+        empty_directory File.join("app", "serializers")
+        template 'serializer.rb', File.join('app/serializers', class_path, "#{controller_file_name}_serializer.rb")
       end
 
       # create Extjs MVC structure
@@ -86,30 +69,9 @@ module ExtjsScaffold
 
       def update_application_js
         app_init = "\n"
-        app_init << "      // #{plural_table_name.capitalize}: Initialize controller and create list grid \n"
-        app_init << "      if (undefined != Ext.get('#{plural_table_name}_list')) { \n"
-        app_init << "        var controller = this.getController('#{plural_table_name.capitalize}');\n"
-        app_init << "        controller.init();\n"
-        app_init << "        Ext.create('#{app_name}.view.#{singular_table_name}.Grid',{renderTo: Ext.getBody() });\n"
-        app_init << "      }\n"
-
-        insert_into_file "app/assets/javascripts/#{app_file_name}", app_init, :after => "launch: function() {"
+        app_init << "\n"
+        insert_into_file "app/assets/javascripts/app.js", app_init, :after => "launch: function() {"
       end
-
-      def add_resource_route
-        return unless options[:routes]
-        route_config =  class_path.collect{|namespace| "namespace :#{namespace} do " }.join(" ")
-        route_config << "resources :#{file_name.pluralize} do \n"
-        route_config << "    collection do \n"
-        route_config << "      post :destroy_all \n"
-        route_config << "      post :update_all \n"
-        route_config << "    end\n"
-        route_config << "  end"
-        route_config << " end" * class_path.size
-        route route_config
-      end
-
-      # copy view templates or hook to :template_engine
 
       def copy_view_files
         return unless options[:views]
@@ -123,14 +85,14 @@ module ExtjsScaffold
         end
       end
 
-      def copy_test_files
-        case options[:test_framework]
-        when :rspec, 'rspec'
-          template "tests/controller_spec.rb", File.join("spec/controllers", "#{controller_file_name}_controller_spec.rb")
-        when :test_unit, 'test_unit'
-          template "tests/controller_test.rb", File.join("test/functional", "#{controller_file_name}_controller_test.rb")
-        end
-      end
+     # def copy_test_files
+     #   case options[:test_framework]
+     #   when :rspec, 'rspec'
+     #     template "tests/controller_spec.rb", File.join("spec/controllers", "#{controller_file_name}_controller_spec.rb")
+     #   when :test_unit, 'test_unit'
+     #     template "tests/controller_test.rb", File.join("test/functional", "#{controller_file_name}_controller_test.rb")
+     #   end
+     # end
 
       protected
 
@@ -225,7 +187,7 @@ module ExtjsScaffold
               store: #{app_name}.store.#{singular_table_name.capitalize}#{attribute.name.capitalize.pluralize},
               displayField:'#{reference_field(attribute)}',
               emptyText: 'type at least 2 characters from #{reference_field(attribute)}',
-              xtype: 'parentcombo'
+              xtype: 'combox'
             }"
         else
           case attribute.type.to_s
@@ -238,15 +200,49 @@ module ExtjsScaffold
                 xtype: 'checkbox'
               }"
           when 'date'
-            return "{id: '#{attribute.name}', name: '[#{singular_table_name}]#{attribute.name}', fieldLabel: '#{attribute.name.titleize}', width: 250, xtype: 'datefield'}"
+            return "{
+              id: '#{attribute.name}',
+              name: '[#{singular_table_name}]#{attribute.name}',
+              fieldLabel: '#{attribute.name.titleize}',
+              width: 250,
+              xtype: 'datefield'
+            }"
           when 'text'
-            return "{id: '#{attribute.name}', name: '[#{singular_table_name}]#{attribute.name}', fieldLabel: '#{attribute.name.titleize}', width: 500, height: 200, xtype: 'textarea'}"
+            return "{
+              id: '#{attribute.name}',
+              name: '[#{singular_table_name}]#{attribute.name}',
+              fieldLabel: '#{attribute.name.titleize}',
+              width: 500,
+              height: 200,
+              xtype:
+              'textarea'
+            }"
           when 'integer'
-            return "{id: '#{attribute.name}', name: '[#{singular_table_name}]#{attribute.name}', fieldLabel: '#{attribute.name.titleize}', width: 250, xtype: 'numberfield', allowDecimals: false}"
+            return "{
+              id: '#{attribute.name}',
+              name: '[#{singular_table_name}]#{attribute.name}',
+              fieldLabel: '#{attribute.name.titleize}',
+              width: 250,
+              xtype: 'numberfield',
+              allowDecimals: false
+            }"
           when 'decimal'
-            return "{id: '#{attribute.name}', name: '[#{singular_table_name}]#{attribute.name}', fieldLabel: '#{attribute.name.titleize}', width: 250, xtype: 'numberfield', allowDecimals: true}"
+            return "{
+              id: '#{attribute.name}',
+              name: '[#{singular_table_name}]#{attribute.name}',
+              fieldLabel: '#{attribute.name.titleize}',
+              width: 250,
+              xtype: 'numberfield',
+              allowDecimals: true
+            }"
           else
-            return "{id: '#{attribute.name}', name: '[#{singular_table_name}]#{attribute.name}', fieldLabel: '#{attribute.name.titleize}', width: 500, xtype: 'textfield'}"
+            return "{
+              id: '#{attribute.name}',
+              name: '[#{singular_table_name}]#{attribute.name}',
+              fieldLabel: '#{attribute.name.titleize}',
+              width: 500,
+              xtype: 'textfield'
+            }"
           end
         end
       end

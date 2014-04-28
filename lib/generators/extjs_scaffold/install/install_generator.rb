@@ -20,7 +20,7 @@ module ExtjsScaffold
 
       def create_application_file
         empty_directory File.join("app/assets", "javascripts")
-        template 'app.js', File.join('app/assets/javascripts/', app_file_name)
+        template 'app.js', File.join('app/assets/javascripts/', 'app.js')
       end
 
       def create_app_folder
