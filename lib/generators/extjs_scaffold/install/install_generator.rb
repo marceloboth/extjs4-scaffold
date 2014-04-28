@@ -35,6 +35,21 @@ module ExtjsScaffold
         empty_directory File.join("app/assets/javascripts/app", "ux")
       end
 
+      def create_home_controller
+        template 'home_controller.rb', File.join('app/controllers', "home_controller.rb")
+      end
+
+      def create_home_view
+        empty_directory File.join("app/views", "home")
+        template 'index.html.erb', File.join('app/views/home', "index.html.erb")
+      end
+
+      def add_resource_route
+        app_init = "\n"
+        app_init << "  root to: 'home#index'\n"
+        insert_into_file "config/routes.rb", app_init, :after => "Application.routes.draw do"
+      end
+
       protected
 
       def app_file_name
