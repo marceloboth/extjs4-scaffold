@@ -157,8 +157,12 @@ module ExtjsScaffold
             return "name: '#{attribute.name}', type: 'bool'"
           when 'datetime', 'date'
             return "type: 'date', sortType: 'asDate', name: '#{attribute.name}', dateFormat: 'c'"
-        	else
-        	  return "name: '#{attribute.name}'"
+          when 'integer'
+            return "name: '#{attribute.name}', type: 'int'"
+          when 'decimal'
+            return "name: '#{attribute.name}', type: 'float'"
+          else
+        	  return "name: '#{attribute.name}', type: 'string'"
         	end
         end
       end
