@@ -17,12 +17,11 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_development_dependency "sqlite3"
-  s.add_development_dependency "rspec", "~> 2.7.0"
-  s.add_development_dependency "rspec-rails", "~> 2.7.0"
+  s.add_development_dependency "rspec"
+  s.add_development_dependency "rspec-rails"
   s.add_development_dependency "generator_spec"
   s.add_development_dependency "cucumber"
   s.add_development_dependency "cucumber-rails"
-  s.add_development_dependency "aruba", "< 0.4.7"
+  s.add_development_dependency "aruba"
   s.add_runtime_dependency "rails", "~> 4.0.0"
-  #s.add_runtime_dependency "extjs4-rails"
 end
