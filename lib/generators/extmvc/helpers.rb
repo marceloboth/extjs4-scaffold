@@ -10,24 +10,24 @@ module Extmvc
         File.join(asset_path, 'javascripts')
       end
 
+      def extjs_app_path
+        File.join(javascript_path, "app")
+      end
+
       def extjs_model_path
-        File.join(javascript_path, "models")
+        File.join(extjs_app_path, "model")
       end
 
       def extjs_controller_path
-        File.join(javascript_path, "controller")
+        File.join(extjs_app_path, "controller")
       end
 
       def extjs_store_path
-        File.join(javascript_path, "store")
+        File.join(extjs_app_path, "store")
       end
 
       def extjs_view_path
-        File.join(javascript_path, "views")
-      end
-
-      def template_path
-        File.join(asset_path, "templates")
+        File.join(extjs_app_path, "views")
       end
 
       def singular_file_name

@@ -22,16 +22,21 @@ module Extmvc
                     desc: "Javascript manifest file to modify (or create)"
 
       def create_dir_layout
+        empty_directory extjs_app_path
         empty_directory extjs_model_path
         empty_directory extjs_store_path
         empty_directory extjs_controller_path
         empty_directory extjs_view_path
       end
 
+      def create_home_controller
+
+      end
+
       def create_app_file
         js = options.javascript
         ext = js ? ".js" : ".js.coffee"
-        template "app#{ext}", "#{javascript_path}/#{app_filename}#{ext}"
+        template "app#{ext}", "#{extjs_app_path}/app#{ext}"
       end
     end
   end
