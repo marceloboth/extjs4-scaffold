@@ -1,4 +1,4 @@
-module extmvc
+module Extmvc
   module Generators
     module Helpers
 

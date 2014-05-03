@@ -1,8 +1,8 @@
 require 'generators/extmvc/helpers'
 
 module Extmvc
-  module Genarators
-    module InstallGenerator < Rails::Generators::Base
+  module Generators
+    class InstallGenerator < Rails::Generators::Base
       include Extmvc::Generators::Helpers
 
       source_root File.expand_path("../templates", __FILE__)

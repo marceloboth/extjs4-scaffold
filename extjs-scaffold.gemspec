@@ -23,5 +23,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "cucumber"
   s.add_development_dependency "cucumber-rails"
   s.add_development_dependency "aruba"
-  s.add_runtime_dependency "rails", "~> 4.0.0"
+  s.add_runtime_dependency "rails"
 end
