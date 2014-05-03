@@ -6,6 +6,10 @@ module Extmvc
         File.join('app', 'assets')
       end
 
+      def stylesheet_path
+        File.join(asset_path, 'stylesheets')
+      end
+
       def javascript_path
         File.join(asset_path, 'javascripts')
       end
