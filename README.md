@@ -6,9 +6,12 @@ Sencha Extjs 4 scaffolding gem. This gem makes less painful to use Rails 4 with 
 ## To install
 in the gem file
 
-    gem 'extjs4-scaffold'
+    gem 'extjs4-scaffold', :github => 'git@github.com:marceloboth/extjs4-scaffold.git'
     
-run the installation
+run the installation, for use Coffeescript:
 
     rails g extmvc:install
 
+for use Javascript:
+
+    rails g extmvc:install -j
